@@ -1,39 +1,7 @@
-class Predator {
+class Predator extends GrassEater {
     constructor(x, y) {
-
-        this.x = x;
-        this.y = y;
-        this.multiply = 8;
+        super(x, y)
         this.energy = 35;
-        this.directions = [];
-    }
-
-    getNewCoordinates() {
-        this.directions = [
-            [this.x - 1, this.y - 1],
-            [this.x, this.y - 1],
-            [this.x + 1, this.y - 1],
-            [this.x - 1, this.y],
-            [this.x + 1, this.y],
-            [this.x - 1, this.y + 1],
-            [this.x, this.y + 1],
-            [this.x + 1, this.y + 1]
-        ];
-    }
-
-    chooseCell(char) {
-        this.getNewCoordinates();
-        let found = [];
-        for (let i in this.directions) {
-            let x = this.directions[i][0];
-            let y = this.directions[i][1];
-            if (x >= 0 && x < matrix[0].length && y >= 0 && y < matrix.length) {
-                if (matrix[y][x] == char) {
-                    found.push(this.directions[i])
-                }
-            }
-        }
-        return found;
     }
 
     mul() {
@@ -48,23 +16,6 @@ class Predator {
             this.energy = 8
         }
     }
-
-    move() {
-        this.energy--
-        let emptyCells = this.chooseCell(0)
-        let newCell = random(emptyCells)
-        if (newCell && this.energy >= 0) {
-            let newX = newCell[0]
-            let newY = newCell[1]
-            matrix[newY][newX] = matrix[this.y][this.x]
-            matrix[this.y][this.x] = 0
-            this.x = newX
-            this.y = newY
-        } else {
-            this.die()
-        }
-    }
-
 
     //predator(red) eats yellow
     eat() {
@@ -84,44 +35,41 @@ class Predator {
                     break;
                 }
             }
-            // if (this.energy >= 13) {
-            //    this.mul()
-            // }
         } else {
             this.move()
         }
     }
 
     //predator eats black
-     eatVict() {
-     let emptyCells = this.chooseCell(4)
-     let newCell = random(emptyCells)
-         if (newCell) {
-             this.energy++
-             let newX = newCell[0]
-             let newY = newCell[1]
-             matrix[newY][newX] = matrix[this.y][this.x]
-             matrix[this.y][this.x] = 0
-             this.x = newX
-             this.y = newY
-             for (var i in VictimArr) {
-                 if (newX == VictimArr[i].x && newY == VictimArr[i].y) {
-                     VictimArr.splice(i, 1);
-                     for(let i = 0; i <= matrix.length; i++){
-                     let newX1 = newCell[0]
-                     let newY1 = newCell[1]
-                     matrix[newX1][newY1] = 5
-                     let bomb = new Bomb(newX1, newY1)
-                     BombArr.push(bomb)
-                     }
-                     break;
-                 }
-                 else {
-                     this.move()
-                 }
-             }
-         }
-     }
+    eatVict() {
+        let emptyCells = this.chooseCell(4)
+        let newCell = random(emptyCells)
+        if (newCell) {
+            this.energy++
+            let newX = newCell[0]
+            let newY = newCell[1]
+            matrix[newY][newX] = matrix[this.y][this.x]
+            matrix[this.y][this.x] = 0
+            this.x = newX
+            this.y = newY
+            for (var i in VictimArr) {
+                if (newX == VictimArr[i].x && newY == VictimArr[i].y) {
+                    VictimArr.splice(i, 1);
+                    for (let i = 0; i <= matrix.length; i++) {
+                        let newX1 = newCell[0]
+                        let newY1 = newCell[1]
+                        matrix[newX1][newY1] = 5
+                        let bomb = new Bomb(newX1, newY1)
+                        BombArr.push(bomb)
+                    }
+                    break;
+                }
+                else {
+                    this.move()
+                }
+            }
+        }
+    }
 
     die() {
         matrix[this.y][this.x] = 0

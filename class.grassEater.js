@@ -1,9 +1,7 @@
-class GrassEater {
+class GrassEater extends LivingCreature {
     constructor(x, y) {
-        this.x = x;
-        this.y = y;
+        super(x, y)
         this.energy = 8;
-        this.directions = [];
     }
 
     getNewCoordinates() {
@@ -21,23 +19,13 @@ class GrassEater {
 
     chooseCell(char) {
         this.getNewCoordinates();
-        let found = [];
-        for (let i in this.directions) {
-            let x = this.directions[i][0];
-            let y = this.directions[i][1];
-            if (x >= 0 && x < matrix[0].length && y >= 0 && y < matrix.length) {
-                if (matrix[y][x] == char) {
-                    found.push(this.directions[i])
-                }
-            }
-        }
-        return found;
+        return super.chooseCell(char)
     }
 
     mul() {
         let emptyCells = this.chooseCell(0)
         let newCell = random(emptyCells)
-        if (newCell ){
+        if (newCell) {
             let newX = newCell[0]
             let newY = newCell[1]
             matrix[newY][newX] = 2
@@ -47,26 +35,26 @@ class GrassEater {
         }
     }
 
-    move(){
+    move() {
         this.energy--
         let emptyCells = this.chooseCell(0)
         let newCell = random(emptyCells)
-        if(newCell && this.energy >= 0){
+        if (newCell && this.energy >= 0) {
             let newX = newCell[0]
             let newY = newCell[1]
             matrix[newY][newX] = matrix[this.y][this.x]
             matrix[this.y][this.x] = 0
             this.x = newX
             this.y = newY
-        }else{
+        } else {
             this.die()
         }
     }
 
-    eat(){
+    eat() {
         let emptyCells = this.chooseCell(1)
         let newCell = random(emptyCells)
-        if(newCell){
+        if (newCell) {
             this.energy++
             let newX = newCell[0]
             let newY = newCell[1]
@@ -80,17 +68,17 @@ class GrassEater {
                     break;
                 }
             }
-            if(this.energy >= 13){
+            if (this.energy >= 13) {
                 this.mul()
             }
-            
-        }else{
+
+        } else {
             this.move()
         }
     }
 
 
-    die(){
+    die() {
         matrix[this.y][this.x] = 0
         for (var i in grassEaterArr) {
             if (this.x == grassEaterArr[i].x && this.y == grassEaterArr[i].y) {
